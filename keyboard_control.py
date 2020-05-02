@@ -18,8 +18,8 @@ robot.stop()
 
 print("imports finished")
 
-power = 0.9
-step = 0.3
+power = 0.95
+step = 0.2
 print("starting loop")
 
 try:
@@ -27,9 +27,11 @@ try:
 		key =  keyboard.read_key()
 		print(f"key value is {key}")
 		if key == "up":
+			
 			robot.forward(power)
 			print("forward")
 		if key == "right":
+			
 			robot.right(power)
 			print("right")
 		if key == "left":
