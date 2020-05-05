@@ -52,9 +52,7 @@ def CreateDictionaryWithAttBasedOnObjs(listOfObjects, attributesToSave):
 
 def save_img(obj, img): cv2.imwrite(obj.name,img)
 
-p = make_images_dir()
-c = start_camera()
-robot = start_robot()
+
 
 
 
@@ -90,52 +88,56 @@ def getmax_image_number(p):
     last = max(img_numbers)
     return last  
 
-# start where previous ones stopped
-img_and_dir.counter = getmax_image_number(p)+1
+if __name__ == "__main__":
+    p = make_images_dir()
+    c = start_camera()
+    robot = start_robot()
+    # start where previous ones stopped
+    img_and_dir.counter = getmax_image_number(p)+1
 
-power = 0.95
-step = 0.2
-print("starting loop")
+    power = 0.95
+    step = 0.2
+    print("starting loop")
 
-try:
-	while True:
-		key =  keyboard.read_key()
-		print(f"key value is {key}")
-		if key == "up":			
-			robot.forward(power)
-			print("forward")
-           
-		if key == "right":			
-			robot.right(power)
-			print("right")
-		if key == "left":
-			robot.left(power)
-			print("left")
-		if key == "down":
-			robot.backward(power)
-			print("backward")
-		if key == "q":
-			robot.stop()
-			print('q pressed. breaking')
-			break
-		if key == "r":
-			robot.stop()
-		if key!='q':
-			time.sleep(step)
-			robot.stop()
-			# make sure you sleep and stop the robot before trying to process the data. Otherwise this might take too long. 
-			img_and_dir.make_and_save(key)
-finally:
-	robot.stop()
-	attributesToSave = ['name', 'counter','direction']
-	df =  CreateDFWithAttBasedOnObjs(img_and_dir.dataList, attributesToSave)
-	csvfiles = list(p.glob("*.csv"))
-	num = len(csvfiles)+1
-	name = f'images/drivedata{num}.csv'
-	df.to_csv(name)
-	print(f"Saving csv file as {name}")
-	c.stop()
-	del c
-	print("stop on finally")
-	del robot
-print("all done")
+    try:
+        while True:
+            key =  keyboard.read_key()
+            print(f"key value is {key}")
+            if key == "up":			
+                robot.forward(power)
+                print("forward")
+            if key == "right":			
+                robot.right(power)
+                print("right")
+            if key == "left":
+                robot.left(power)
+                print("left")
+            if key == "down":
+                robot.backward(power)
+                print("backward")
+            if key == "q":
+                robot.stop()
+                print('q pressed. breaking')
+                break
+            if key == "r":
+                robot.stop()
+            if key!='q':
+                time.sleep(step)
+                robot.stop()
+                # make sure you sleep and stop the robot before trying to 
+                # process the data. Otherwise this might take too long. 
+                img_and_dir.make_and_save(key)
+    finally:
+        robot.stop()
+        attributesToSave = ['name', 'counter','direction']
+        df =  CreateDFWithAttBasedOnObjs(img_and_dir.dataList, attributesToSave)
+        csvfiles = list(p.glob("*.csv"))
+        num = len(csvfiles)+1
+        name = f'images/drivedata{num}.csv'
+        df.to_csv(name)
+        print(f"Saving csv file as {name}")
+        c.stop()
+        del c
+        print("stop on finally")
+        del robot
+    print("all done")
